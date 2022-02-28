@@ -1,3 +1,4 @@
+from logging import exception
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
@@ -30,9 +31,12 @@ class Product(models.Model):
         total_rating = 0
         for rating in self.ratings.all():
             total_rating += rating.score
-
-        avg = total_rating / self.ratings.count()
-        return avg
+        try:
+            avg = total_rating / self.ratings.count()
+            return avg
+        except ZeroDivisionError:
+            print("There are no ratings for this product yet. Please create one.")
+            
 
     @property
     def number_purchased(self):
