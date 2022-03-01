@@ -168,8 +168,11 @@ class ProductView(ViewSet):
         name = request.query_params.get('name', None)
 
         if number_sold:
+            #annotate adds max/min/count properties
             products = products.annotate(
+                #count orders, filter by orders not completed (~ is "not"/Q is query/ dunder (__) is used to call payment_type nested in orders)
                 order_count=Count('orders', filter=~Q(orders__payment_type=None))
+                #filter all orders by the number of orders greater than (--gt) number sold.  Could use lt (less than) or lte (<=) or gte (>=)
             ).filter(order_count__gt=number_sold)
 
         if order is not None:
