@@ -36,7 +36,7 @@ class Product(models.Model):
             return avg
         except ZeroDivisionError:
             print("There are no ratings for this product yet. Please create one.")
-            
+    
     @property
     def number_purchased(self):
         """Returns the number of times product shows up on completed orders
