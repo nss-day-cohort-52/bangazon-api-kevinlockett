@@ -254,11 +254,12 @@ class ProductView(ViewSet):
             product = Product.objects.get(pk=pk)
             order = Order.objects.get(
                 user=request.auth.user, completed_on=None)
+            order.products.remove(product)
             return Response(None, status=status.HTTP_204_NO_CONTENT)
         except Product.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'Product does not exist': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
         except Order.DoesNotExist as ex:
-            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+            return Response({'Order does not exist': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
     @swagger_auto_schema(
         method='DELETE',
