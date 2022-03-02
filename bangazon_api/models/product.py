@@ -1,6 +1,8 @@
 from logging import exception
 from django.db import models
+from rest_framework.response import Response
 from django.core.validators import MaxValueValidator, MinValueValidator
+from rest_framework import status
 
 
 class Product(models.Model):
@@ -35,7 +37,10 @@ class Product(models.Model):
             avg = total_rating / self.ratings.count()
             return avg
         except ZeroDivisionError:
-            print("There are no ratings for this product yet. Please create one.")
+            return Response({
+                'message': 'There are no ratings for this product yet. Please create one.'},
+                status=status.HTTP_404_NOT_FOUND
+            )
     
     @property
     def number_purchased(self):
