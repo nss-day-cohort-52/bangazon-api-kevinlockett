@@ -106,6 +106,16 @@ class StoreView(ViewSet):
         except Store.DoesNotExist as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
+    @swagger_auto_schema(method='post', responses={
+        201: openapi.Response(
+            description="Returns a message that store was favorited",
+            schema=MessageSerializer()
+        ),
+        404: openapi.Response(
+            description="Either the store or the auth user was not found",
+            schema=MessageSerializer()
+        ),
+    })
     @action(methods=['post'], detail=True)
     def favorite(self, request, pk):
         """create a favorite store for the current user

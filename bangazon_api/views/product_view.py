@@ -8,10 +8,10 @@ from rest_framework.exceptions import ValidationError
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from bangazon_api.helpers import STATE_NAMES
-from bangazon_api.models import Product, Store, Category, Order, Rating, Recommendation
+from bangazon_api.models import Product, Store, Category, Order, Rating, Recommendation, Like
 from bangazon_api.serializers import (
     ProductSerializer, CreateProductSerializer, MessageSerializer,
-    AddProductRatingSerializer, AddRemoveRecommendationSerializer)
+    AddProductRatingSerializer, AddRemoveRecommendationSerializer, LikedProductSerializer)
 
 
 class ProductView(ViewSet):
@@ -355,3 +355,60 @@ class ProductView(ViewSet):
             )
 
         return Response({'message': 'Rating added'}, status=status.HTTP_201_CREATED)
+    
+    @swagger_auto_schema(method='post', responses={
+        201: openapi.Response(
+            description="Returns a message that product was liked",
+            schema=MessageSerializer()
+        ),
+        404: openapi.Response(
+            description="Either the product or the auth user was not found",
+            schema=MessageSerializer()
+        ),
+    })
+    @action(methods=['post'], detail=True)
+    def like(self, request, pk):
+        """current authorized user can like an ite
+        """
+        try:
+            product = Product.objects.get(pk=pk)
+            user = request.auth.user
+            like = Like()
+            like.product_id = product.id
+            like.customer_id = user.id
+            like.save()
+            return Response({'message': "You liked this product."}, status=status.HTTP_201_CREATED)
+        except (Product.DoesNotExist) as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+
+    @action(methods=['delete'], detail=True)
+    def unlike(self, request, pk):
+        """delete like from product
+        """
+        try:
+            like = Like.objects.get(product_id=pk, customer_id=request.auth.user.id)
+            like.delete()
+            return Response({'message': "You removed your like for this product."}, status=status.HTTP_201_CREATED)
+        except (Product.DoesNotExist) as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
+        
+    @swagger_auto_schema(method='get', responses={
+        201: openapi.Response(
+            description="Lists all products current auth user has liked",
+            schema=MessageSerializer()
+        ),
+        404: openapi.Response(
+            description="Current user has not liked any products",
+            schema=MessageSerializer()
+        ),
+    })
+    @action(methods=['get'], detail=False)
+    def liked(self, request):
+        """list products liked by current auth user
+        """
+        try:
+            like = Like.objects.filter(customer_id=request.auth.user.id)
+            serializer = LikedProductSerializer(like, many=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        except (Product.DoesNotExist) as ex:
+            return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
