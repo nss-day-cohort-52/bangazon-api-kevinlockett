@@ -7,12 +7,11 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from bangazon_api.models import Order, PaymentType
-from bangazon_api.serializers import OrderSerializer, UpdateOrderSerializer
-from bangazon_api.serializers.message_serializer import MessageSerializer
+from bangazon_api.serializers import OrderSerializer, UpdateOrderSerializer, MessageSerializer
 
 
 class OrderView(ViewSet):
-
+    # swagger_auto_schema is a decorator that generates html documentation on (localhost:8000/swagger)
     @swagger_auto_schema(responses={
         200: openapi.Response(
             description="The list of orders for the current user",
@@ -66,7 +65,7 @@ class OrderView(ViewSet):
             order.payment_type = payment_type
             order.completed_on = datetime.now()
             order.save()
-            return Response({'message': "Order Completed"})
+            return Response({'message' "Order Completed"}, status=status.HTTP_204_NO_CONTENT)
         except (Order.DoesNotExist, PaymentType.DoesNotExist) as ex:
             return Response({'message': ex.args[0]}, status=status.HTTP_404_NOT_FOUND)
 
