@@ -1,3 +1,5 @@
+from faker import Faker
+import faker_commerce
 from rest_framework import status
 from rest_framework.test import APITestCase
 from rest_framework.authtoken.models import Token
@@ -8,6 +10,9 @@ from bangazon_api.models import Order, PaymentType, Product
 
 
 class OrderTests(APITestCase):
+    faker = Faker()
+    faker.add_provider(faker_commerce.Provider)
+    
     def setUp(self):
         """
         Seed the database
@@ -35,9 +40,9 @@ class OrderTests(APITestCase):
             HTTP_AUTHORIZATION=f'Token {self.token.key}')
         
         self.payment_type = PaymentType.objects.create(
-            merchant_name = "Discover",
-            acct_number = 587935165241,
-            customer_id = 1
+            merchant_name = self.faker.credit_card_provider(),
+            acct_number = self.faker.credit_card_number(),
+            customer_id = self.user1.id
         )
 
     def test_list_orders(self):
@@ -52,16 +57,11 @@ class OrderTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
     def test_complete_order(self):
-        """ensure current auth user can add payment type and complete order
-        """
+        """ensure current auth user can add payment type and complete order"""
         data = {
             "paymentTypeId": self.payment_type.id
         }
-
         response = self.client.put(f'/api/orders/{self.order1.id}/complete', data, format="json")
-
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
         order = Order.objects.get(pk = self.order1.id)
-
         self.assertEqual(order.payment_type_id, data['paymentTypeId'])
