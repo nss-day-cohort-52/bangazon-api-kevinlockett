@@ -37,9 +37,8 @@ class Product(models.Model):
             avg = total_rating / self.ratings.count()
             return avg
         except ZeroDivisionError:
-            return Response({
-                'message': 'There are no ratings for this product yet. Please create one.'},
-                status=status.HTTP_404_NOT_FOUND
+            return ({
+                'message': 'There are no ratings for this product yet. Please create one.'}
             )
     
     @property

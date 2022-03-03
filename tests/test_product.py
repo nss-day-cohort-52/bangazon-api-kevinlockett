@@ -7,14 +7,13 @@ from rest_framework.authtoken.models import Token
 from django.core.management import call_command
 from django.contrib.auth.models import User
 from bangazon_api.helpers import STATE_NAMES
-from bangazon_api.models import Category
-from bangazon_api.models.product import Product
+from bangazon_api.models import Category, Product, Store
 
 
 class ProductTests(APITestCase):
     def setUp(self):
         """
-
+        Create auth users & user token
         """
         call_command('seed_db', user_count=2)
         self.user1 = User.objects.filter(store__isnull=False).first()
@@ -46,7 +45,6 @@ class ProductTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertIsNotNone(response.data['id'])
 
-
     def test_update_product(self):
         """
         Ensure we can update a product.
@@ -75,3 +73,27 @@ class ProductTests(APITestCase):
         response = self.client.get('/api/products')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), Product.objects.count())
+        
+    def test_delete_product(self):
+        """
+        Ensure we can delete a product
+        """
+        
+        # Add a product to delete
+        product = Product.objects.first()
+        
+#        product = Product()
+#        product.name = self.faker.ecommerce_name()
+#        product.store = self.user1.store
+#        product.price = random.randint(50, 1000)
+#        product.description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam elit."
+#        product.quantity = random.randint(2, 20)
+#        product.location = random.choice(STATE_NAMES)
+#        product.imagePath = ""
+#        product.category = Category.objects.get_or_create(
+#                    name=self.faker.ecommerce_category())[0]
+#        product.save()
+        
+        
+        response = self.client.delete(f'/api/products/{product.id}')
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
