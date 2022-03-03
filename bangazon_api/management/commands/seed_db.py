@@ -87,6 +87,7 @@ class Command(BaseCommand):
             )
 
     def create_closed_orders(self, user):
+        """Create Completed (Closed) Orders"""
         order = Order.objects.create(
             user=user,
             payment_type=user.payment_types.first(),
@@ -98,6 +99,7 @@ class Command(BaseCommand):
         order.products.set(products)
 
     def create_open_orders(self, user):
+        """Create open orders"""
         order = Order.objects.create(
             user=user
         )
@@ -107,6 +109,7 @@ class Command(BaseCommand):
         order.products.set(products)
 
     def create_favorite(self, user):
+        """Create Favorite Stores"""
         store = Store.objects.get(pk=random.randint(1, Store.objects.count()))
 
         Favorite.objects.create(
@@ -115,6 +118,7 @@ class Command(BaseCommand):
         )
 
     def create_ratings(self, user):
+        """Create Product Ratings"""
         for product in Product.objects.all():
             Rating.objects.create(
                 customer=user,
