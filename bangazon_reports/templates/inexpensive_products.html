@@ -7,11 +7,11 @@
         <title>Bangazon Reports</title>
     </head>
     <body>
-        <h1>Expensive Products</h1>
+        <h1>Inexpensive Products</h1>
         <ul>
-            {% if expensive_products_list %}
-            <h2>{{expensive_products_list|length}} Products:</h2>
-                {% for product in expensive_products_list %}
+            {% if inexpensive_products_list %}
+            <h2>{{inexpensive_products_list|length}} Products:</h2>
+                {% for product in inexpensive_products_list %}
                     <li>
                         <h3>{{ product.product }}</h3>
                             <ul style="list-style:none;">
@@ -25,7 +25,7 @@
                     </li>
                 {% endfor %}
             {% else %}
-                <p>There are currently no products priced above $1,000.</p>
+                <p>There are currently no products priced at or below $1,000.</p>
             {% endif %}
         </ul>
     </body>

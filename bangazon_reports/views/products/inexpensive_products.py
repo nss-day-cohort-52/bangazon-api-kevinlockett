@@ -5,7 +5,7 @@ from django.views import View
 
 from bangazon_reports.views.helpers import dict_fetch_all
 
-class ExpensiveProducts(View):
+class InexpensiveProducts(View):
     def get(self, request):
         with connection.cursor() as db_cursor:
             
@@ -15,7 +15,7 @@ class ExpensiveProducts(View):
             FROM bangazon_api_product
             JOIN bangazon_api_store
                 ON bangazon_api_product.store_id = bangazon_api_store.id
-            WHERE price > 1000
+            WHERE price <= 1000
             """)
             
             #Pass the the db_cursor to the dict_fetch_all function to turn the fetch_all() response into a dictionary
@@ -35,11 +35,11 @@ class ExpensiveProducts(View):
                 products.append(product)
             
             # The template string must match the file name of the html template
-            template = 'expensive_products.html'
+            template = 'inexpensive_products.html'
         
             # The context will be a dictionary that the template can access to show data
             context = {
-                "expensive_products_list": products
+                "inexpensive_products_list": products
             }
 
             return render(request, template, context)
