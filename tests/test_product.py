@@ -83,7 +83,7 @@ class ProductTests(APITestCase):
         response = self.client.delete(f'/api/products/{product.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-    def test_add_order_item(self):
+    def test_add_product_to_current_order(self):
         """
         Ensure items added to cart are placed on open order
         """
@@ -101,3 +101,38 @@ class ProductTests(APITestCase):
         self.assertIsNotNone(OrderProduct.objects.get(
             order=order_response.data["id"], product=product
         ))
+    
+    def test_rate_product(self):
+        """
+        Ensure we can add a rating to a product and average rating is updated and correct
+        """
+        #Create product to rate - select first product from table
+        product = Product.objects.first()
+        
+        #Create rating dictionary for product
+        rating = {
+            "score": random.randint(1, 5),
+            "review": self.faker.paragraph()
+        }
+        
+        #Post product rating & get product
+        response = self.client.post(f'/api/products/{product.id}/rate-product', rating, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        response = self.client.get(f'/api/products/{product.id}')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        #Calculate average of all ratings
+        ratings_total = 0
+        for rating in response.data['ratings']:
+            ratings_total += rating['score']
+            rating_average = ratings_total / len(response.data['ratings'])
+        
+        #Compare calculated average with data avarage
+        self.assertEqual(response.data['average_rating'], rating_average)
+        
+        
+        
+        
+        
+        
+        

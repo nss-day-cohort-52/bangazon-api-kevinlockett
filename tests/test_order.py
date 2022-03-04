@@ -65,3 +65,5 @@ class OrderTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         order = Order.objects.get(pk = self.order1.id)
         self.assertEqual(order.payment_type_id, data['paymentTypeId'])
+        
+    
