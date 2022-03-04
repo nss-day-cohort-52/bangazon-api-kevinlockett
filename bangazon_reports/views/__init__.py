@@ -1,1 +1,2 @@
 from .products.expensive_products import ExpensiveProducts
+from .products.inexpensive_products import InexpensiveProducts
