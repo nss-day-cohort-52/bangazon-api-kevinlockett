@@ -33,7 +33,7 @@ class ProductTests(APITestCase):
 
         data = {
             "name": self.faker.ecommerce_name(),
-            "price": random.randint(50, 1000),
+            "price": float("{0:.2f}".format(random.uniform(50, 1000))),
             "description": self.faker.paragraph(),
             "quantity": random.randint(2, 20),
             "location": random.choice(STATE_NAMES),

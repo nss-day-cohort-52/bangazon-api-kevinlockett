@@ -77,7 +77,8 @@ class Command(BaseCommand):
             Product.objects.create(
                 name=self.faker.ecommerce_name(),
                 store=store,
-                price=random.randint(50, 1000),
+                #price=random.randint(50, 1000),
+                price=float("{0:.2f}".format(random.uniform(50, 1000))),
                 description="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam elit.",
                 quantity=random.randint(2, 20),
                 location=random.choice(STATE_NAMES),
