@@ -43,12 +43,8 @@ class PaymentTests(APITestCase):
         Ensure we can delete a payment type for a customer
         """
         
-        # Add a payment type to delete
-        payment_type = PaymentType()
-        payment_type.merchant_name = self.faker.credit_card_provider(),
-        payment_type.acct_number = self.faker.credit_card_number(),
-        payment_type.customer_id = self.user1.id
-        payment_type.save()
+        # Add a payment type to delete -- use the first Payment Type in the table
+        payment_type = PaymentType.objects.first()
         
         response = self.client.delete(f'/api/payment-types/{payment_type.id}')
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
