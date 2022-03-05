@@ -1,3 +1,4 @@
-from .products.expensive_products import ExpensiveProducts
-from .products.inexpensive_products import InexpensiveProducts
 from .orders.completed_orders import CompletedOrders
+from .products.expensive_products import ExpensiveProducts
+from .orders.incomplete_orders import IncompleteOrders
+from .products.inexpensive_products import InexpensiveProducts
