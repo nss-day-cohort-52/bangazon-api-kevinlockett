@@ -10,15 +10,15 @@
         <h1>Expensive Products</h1>
         <ul>
             {% if expensive_products_list %}
-            <h2>{{expensive_products_list|length}} Products:</h2>
+            <h2>{{expensive_products_list|length}} Products Priced Over $1,000:</h2>
                 {% for product in expensive_products_list %}
                     <li>
                         <h3>{{ product.product }}</h3>
                             <ul style="list-style:none;">
-                                <li style=padding-bottom:1em;">
+                                <li style=padding-bottom:.5em;">
                                     <strong>Sale Price:</strong> ${{ product.price|floatformat:2 }}    
                                 </li>
-                                <li style=padding-bottom:1em;">
+                                <li style=padding-bottom:.5em;">
                                     <strong>Store:</strong> {{ product.store }}
                                 </li>
                             </ul>
