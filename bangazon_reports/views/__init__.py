@@ -1,4 +1,5 @@
 from .orders.completed_orders import CompletedOrders
 from .products.expensive_products import ExpensiveProducts
+from .customers.favorited_sellers_by_customer import FavoritedSellersByCustomer
 from .orders.incomplete_orders import IncompleteOrders
 from .products.inexpensive_products import InexpensiveProducts

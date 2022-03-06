@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Bangazon Reports</title>
+    </head>
+    <body>
+        <h1>Favorited Sellers by Customers</h1>
+        <ul style="list-style:none;">
+            {% if favorited_sellers_by_customer_list %}
+                {% for customer in favorited_sellers_by_customer_list %}
+                    <li ;>
+                        <h3>Customer ID #{{ customer.customer_id }}: {{ customer.customer }}</h3>
+                            <ul style="list-style:square; margin:-.5em 0 0 -1.25em">
+                                <h4>Favorited Seller(s):</h4>
+                                {% for store in customer.stores %}
+                                <li style="padding-bottom:.5em; margin-left:1.5em;">
+                                    {{ store.store }}    
+                                </li>
+                                {% endfor %}
+                            </ul>
+                    </li>
+                {% endfor %}
+            {% else %}
+                <p>There are currently no completed orders.</p>
+            {% endif %}
+        </ul>
+    </body>
+</html>

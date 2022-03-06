@@ -12,9 +12,9 @@
             {% if incomplete_orders_list %}
             <h2>{{incomplete_orders_list|length}} Incomplete Orders:</h2>
                 {% for order in incomplete_orders_list %}
-                    <li>
+                    <li style="list-style:none;">
                         <h3>Order ID # {{ order.order_id }}</h3>
-                            <ul style="list-style:none;">
+                            <ul style="list-style:none; margin:-.5em 0 0 -1.5em;">
                                 <li style=padding-bottom:.5em;">
                                     <strong>Customer:</strong> {{ order.customer_name }}    
                                 </li>
