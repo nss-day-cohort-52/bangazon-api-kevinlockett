@@ -12,19 +12,19 @@ class CompletedOrders(View):
             #Execute SQLite3 query:
             db_cursor.execute("""    
             SELECT
-                bangazon_api_order.id AS order_id,
-                (auth_user.first_name || " " || auth_user.last_name) AS customer_name,
-                sum(bangazon_api_product.price) AS total_paid,
-                bangazon_api_paymenttype.merchant_name AS payment_type
-            FROM bangazon_api_order
-            JOIN auth_user
-                ON bangazon_api_order.user_id = auth_user.id
-            JOIN bangazon_api_paymenttype
-                ON bangazon_api_order.payment_type_id = bangazon_api_paymenttype.id
-            JOIN bangazon_api_orderproduct
-                ON bangazon_api_order.id = bangazon_api_orderproduct.order_id
-            JOIN bangazon_api_product
-                ON bangazon_api_orderproduct.product_id = bangazon_api_product.id
+                o.id AS order_id,
+                (u.first_name || " " || u.last_name) AS customer_name,
+                sum(p.price) AS total_paid,
+                pt.merchant_name AS payment_type
+            FROM bangazon_api_order o
+            JOIN auth_user u
+                ON o.user_id = u.id
+            JOIN bangazon_api_paymenttype pt
+                ON o.payment_type_id = pt.id
+            JOIN bangazon_api_orderproduct op
+                ON o.id = op.order_id
+            JOIN bangazon_api_product p
+                ON op.product_id = p.id
             WHERE payment_type_id NOT NULL
             GROUP BY order_id;
             """)

@@ -12,9 +12,9 @@
             {% if inexpensive_products_list %}
             <h2>{{inexpensive_products_list|length}} Products Priced $1,000 or Less:</h2>
                 {% for product in inexpensive_products_list %}
-                    <li>
+                    <li style="list-style:none;">
                         <h3>{{ product.product }}</h3>
-                            <ul style="list-style:none;">
+                            <ul style="list-style:none; margin:-.5em 0 0 -1.5em;">
                                 <li style=padding-bottom:.5em;">
                                     <strong>Sale Price:</strong> ${{ product.price|floatformat:2 }}    
                                 </li>

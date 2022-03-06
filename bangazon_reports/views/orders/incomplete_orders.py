@@ -12,18 +12,18 @@ class IncompleteOrders(View):
             #Execute SQLite3 query:
             db_cursor.execute("""    
             SELECT
-                bangazon_api_order.id AS order_id,
-                (auth_user.first_name || " " || auth_user.last_name) AS customer_name,
+                o.id AS order_id,
+                (u.first_name || " " || u.last_name) AS customer_name,
                 sum(price) as total_cost,
-                bangazon_api_order.created_on
-            FROM bangazon_api_order
-            JOIN auth_user
-                ON bangazon_api_order.user_id = auth_user.id
-            JOIN bangazon_api_orderproduct
-                ON bangazon_api_order.id = bangazon_api_orderproduct.order_id
-            JOIN bangazon_api_product
-                ON bangazon_api_orderproduct.product_id = bangazon_api_product.id
-            WHERE bangazon_api_order.completed_on IS NULL
+                o.created_on
+            FROM bangazon_api_order AS o
+            JOIN auth_user AS u
+                ON o.user_id = u.id
+            JOIN bangazon_api_orderproduct AS op
+                ON o.id = op.order_id
+            JOIN bangazon_api_product AS p
+                ON op.product_id = p.id
+            WHERE o.completed_on IS NULL
             GROUP BY order_id;
             """)
             
